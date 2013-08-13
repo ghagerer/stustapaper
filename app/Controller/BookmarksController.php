@@ -94,7 +94,7 @@ class BookmarksController extends AppController {
  *
  * @return void
  */
-	public function add() {die(print_r($this->request->data,true));
+	public function add() {
 		
 		if ($this->request->is('post')) {
 			$this->request->data['Bookmark']['user_id'] = $this->Auth->user('id');
@@ -189,6 +189,74 @@ class BookmarksController extends AppController {
 		$this->set(compact('folders'));
 	}
 	
+	public function share($id = null) {
+		if (!$this->Bookmark->exists($id)) {
+			throw new NotFoundException(__('Invalid bookmark'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			
+			// find friend
+			$user = $this->Bookmark->User->find('first', array(
+				'conditions' => array('User.username' => $this->request->data['User']['name'])
+			));
+			
+			// does friend exist?
+			if (!empty($user)) {
+				
+				$friendId = $user['User']['id'];
+				
+				// dismiss bookmark id, we want to make a new one for our friend
+				unset($this->request->data['Bookmark']['id']);
+				
+				// is there a friend folder?
+				$folder = $this->Bookmark->Folder->find('first',array(
+					'conditions'=>array(
+						'Folder.name'=>$this->Auth->user('username'),
+						'Folder.user_id'=>$friendId
+				)));
+				
+				if (empty($folder)) {
+					// no -> create one!
+					$this->Bookmark->Folder->save(array('name'=>$this->Auth->user('username'),'user_id'=>$friendId));
+					$folderId = $this->Bookmark->Folder->id;
+				} else {
+					// yes -> take the old one
+					$folderId = $folder['Folder']['id'];
+				}
+				
+				// add relevant data for the bookmark copy
+				$this->request->data['Bookmark']['folder_id'] = $folderId;
+				$this->request->data['Bookmark']['user_id'] = $friendId;
+				
+				// save bookmark copy
+				if ($this->Bookmark->save($this->request->data['Bookmark'])) {
+					
+					// now make a copy of the regarding offline website
+					$offlineWebsite = $this->Bookmark->OfflineWebsite->find('first', array(
+						'conditions' => array('OfflineWebsite.bookmark_id' => $this->Bookmark->id)
+					));
+					$this->request->data['OfflineWebsite'] = array(
+						'html_content' => $offlineWebsite['OfflineWebsite']['html_content'],
+						'bookmark_id' => $this->Bookmark->id
+					);
+					$this->Bookmark->OfflineWebsite->save($this->request->data['OfflineWebsite']);
+					
+					// finish!
+					$this->Session->setFlash(__('The bookmark has been saved'));
+					$this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('The bookmark could not be saved. Please, try again.'));
+				}
+			}
+			
+		} else {
+			$options = array('conditions' => array('Bookmark.' . $this->Bookmark->primaryKey => $id));
+			$this->request->data = $this->Bookmark->find('first', $options);
+		}
+		
+		
+	}
+	
 	public function archive($id = null) {
 		$this->Bookmark->id = $id;
 		if (!$this->Bookmark->exists()) {
@@ -280,8 +348,8 @@ class BookmarksController extends AppController {
 			}
 		}
 		$users = $this->Bookmark->User->find('list');
-		$tags = $this->Bookmark->Tag->find('list');
-		$this->set(compact('users', 'tags'));
+		$folder = $this->Bookmark->Folder->find('list');
+		$this->set(compact('users', 'folder'));
 	}
 
 /**
@@ -307,8 +375,8 @@ class BookmarksController extends AppController {
 			$this->request->data = $this->Bookmark->find('first', $options);
 		}
 		$users = $this->Bookmark->User->find('list');
-		$tags = $this->Bookmark->Tag->find('list');
-		$this->set(compact('users', 'tags'));
+		$folder = $this->Bookmark->Folder->find('list');
+		$this->set(compact('users', 'folder'));
 	}
 
 /**

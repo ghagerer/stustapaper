@@ -9,3 +9,14 @@
 	echo $this->Form->end();
 	?>
 </div>
+
+<div class="folder actions">
+	<h3>
+		<?php echo __('Actions'); ?>
+	</h3>
+	<ul style="margin-bottom:30px">
+		<li>
+			<?php echo $this->Html->link(__('Back'), array('controller' => 'bookmarks', 'action' => 'index')); ?>
+		</li>
+	</ul>
+</div>

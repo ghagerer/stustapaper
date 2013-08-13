@@ -72,7 +72,7 @@ class AppController extends Controller {
 				return true;
 			
 			case 'user': switch ($controller) {
-				case 'bookmarks':					return in_array($action,array('add','index','edit','delete','view','archive','like','added','find'));
+				case 'bookmarks':					return in_array($action,array('add','index','edit','delete','view','archive','like','added','find','share'));
 				case 'folders':						return in_array($action,array('add','index','edit','delete','view'));
 				case 'offline_websites':	return in_array($action,array('view'));
 				case 'users':	return in_array($action,array('login','logout'));

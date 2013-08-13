@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Tag Model
+ * Folder Model
  *
  * @property User $User
  * @property Bookmark $Bookmark

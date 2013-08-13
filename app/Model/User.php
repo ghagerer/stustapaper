@@ -6,7 +6,7 @@ App::uses('AuthComponent', 'Controller/Component');
  *
  * @property Role $Role
  * @property Bookmark $Bookmark
- * @property Tag $Tag
+ * @property Folder $Folder
  */
 class User extends AppModel {
 
@@ -104,8 +104,8 @@ class User extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Tag' => array(
-			'className' => 'Tag',
+		'Folder' => array(
+			'className' => 'Folder',
 			'foreignKey' => 'user_id',
 			'dependent' => false,
 			'conditions' => '',

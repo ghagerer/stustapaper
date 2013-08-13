@@ -31,6 +31,7 @@
 			<?php echo $this->Form->postLink(__('Like'), array('action' => 'like', $bookmark['Bookmark']['id'])); ?>
 			<?php echo $this->Html->link(__('Text'), array('controller' => 'offline_websites', 'action' => 'view', $bookmark['OfflineWebsite']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $bookmark['Bookmark']['id'])); ?>
+			<?php echo $this->Html->link(__('Share'), array('action' => 'share', $bookmark['Bookmark']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $bookmark['Bookmark']['id']), null, __('Are you sure you want to delete # %s?', $bookmark['Bookmark']['id'])); ?>
 		</td>
 	</tr>
