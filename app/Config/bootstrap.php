@@ -109,3 +109,7 @@ CakeLog::config('error', array(
 ));
 CakePlugin::load('DebugKit');
 CakePlugin::load('Search'); 
+CakePlugin::load('Migrations');
+CakePlugin::loadAll(array(
+    'OAuth' => array('routes' => true)
+));

@@ -42,7 +42,8 @@ class AppController extends Controller {
 	public function beforeFilter() {
 		//$this->Auth->allow('index', 'view');
 		$this->set('authUser', $this->Auth->user());
-		$this->Auth->loginRedirect = array('controller' => 'bookmarks', 'action' => 'index', 'admin'=>($this->Auth->user('role')=='admin')?true:false);
+		$this->Auth->loginRedirect = array('controller' => 'bookmarks', 'action' => 'index', 'admin'=>(($this->Auth->user('role')==='admin')?1:0));
+		//die(print_r($this->Auth->loginRedirect));
 	}
 	
 	public function beforeRender() {

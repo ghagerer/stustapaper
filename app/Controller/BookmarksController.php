@@ -125,14 +125,8 @@ class BookmarksController extends AppController {
 			if ($this->Bookmark->save($this->request->data)) {
 				$this->request->data['OfflineWebsite']['bookmark_id'] = $this->Bookmark->id;
 				$this->Bookmark->OfflineWebsite->save($this->request->data);
-				
-				if ($get) {
-					$this->layout = 'ajax';
-					$this->render('added');
-				} else {
-					$this->Session->setFlash(__('The bookmark has been saved'));
-					$this->redirect(array('action' => 'index'));
-				}
+				$this->Session->setFlash(__('The bookmark has been saved'));
+				$this->redirect(array('action' => 'index'));
 			} else {
 				$error = __('The bookmark could not be saved. Please, try again.');
 				if ($get) {
